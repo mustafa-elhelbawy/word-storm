@@ -1,0 +1,42 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Word Storm"
+config/features=PackedStringArray("4.3", "Mobile")
+config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://scripts/autoloads/GameManager.gd"
+ScoreManager="*res://scripts/autoloads/ScoreManager.gd"
+WordValidator="*res://scripts/autoloads/WordValidator.gd"
+SaveGame="*res://scripts/autoloads/SaveGame.gd"
+ParticleManager="*res://scripts/autoloads/ParticleManager.gd"
+AudioManager="*res://scripts/autoloads/AudioManager.gd"
+AdManager="*res://scripts/autoloads/AdManager.gd"
+ThemeManager="*res://scripts/autoloads/ThemeManager.gd"
+
+[display]
+
+window/size/viewport_width=400
+window/size/viewport_height=680
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+window/handheld/orientation=1
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[rendering]
+
+renderer/rendering_method="mobile"
