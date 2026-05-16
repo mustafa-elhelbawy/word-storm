@@ -13,4 +13,4 @@ func load_rewarded() -> void:
 
 
 func show_rewarded() -> void:
-	emit_signal("ad_unavailable")
+	ad_unavailable.emit()
