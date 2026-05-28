@@ -72,6 +72,14 @@ func _pick_letter() -> String:
 			vowel_count += 1
 	if vowel_count == 0:
 		var v: String = VOWELS[_rng.randi() % VOWELS.size()]
+		for _attempt in 5:
+			var count := 0
+			for t in GameManager.active_tiles:
+				if t.letter == v:
+					count += 1
+			if count < 2:
+				break
+			v = VOWELS[_rng.randi() % VOWELS.size()]
 		_last_spawned_letter = v
 		return v
 
@@ -107,6 +115,7 @@ func _spawn_tile() -> void:
 
 
 func _on_tile_exiting(tile: LetterTile) -> void:
+	GameManager.unregister_tile(tile)
 	if _pile.has(tile):
 		_pile.erase(tile)
 		_update_pile_indicator()
@@ -114,7 +123,6 @@ func _on_tile_exiting(tile: LetterTile) -> void:
 
 func _on_tile_landed(col_id: int, landed_tile: LetterTile) -> void:
 	if _pile.size() >= MAX_PILE:
-		GameManager.unregister_tile(landed_tile)
 		landed_tile.destroy()
 		return
 	_pile.append(landed_tile)
@@ -139,7 +147,6 @@ func reset() -> void:
 	_spawn_timer.stop()
 	for child in get_children():
 		if child is LetterTile:
-			GameManager.unregister_tile(child)
 			child.queue_free()
 	_pile.clear()
 	_last_spawned_letter = ""
@@ -152,6 +159,5 @@ func clear_pile(fraction: float) -> void:
 		if _pile.is_empty():
 			break
 		var tile: LetterTile = _pile.pop_front()
-		GameManager.unregister_tile(tile)
 		tile.destroy()
 	_update_pile_indicator()

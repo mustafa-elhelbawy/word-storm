@@ -50,6 +50,7 @@ func remove_last() -> void:
 	if _tiles.is_empty():
 		return
 	var tile := _tiles.pop_back()
+	_disconnect_exiting(tile)
 	tile.deselect()
 	tile_removed.emit(tile)
 	_refresh()
@@ -57,6 +58,7 @@ func remove_last() -> void:
 
 func clear() -> void:
 	for tile in _tiles.duplicate():
+		_disconnect_exiting(tile)
 		tile.deselect()
 	_tiles.clear()
 	_refresh()
@@ -79,6 +81,12 @@ func last_tile() -> LetterTile:
 	if _tiles.is_empty():
 		return null
 	return _tiles.back()
+
+
+func _disconnect_exiting(tile: LetterTile) -> void:
+	var cb := _on_tile_exiting.bind(tile)
+	if tile.tree_exiting.is_connected(cb):
+		tile.tree_exiting.disconnect(cb)
 
 
 func _on_tile_exiting(tile: LetterTile) -> void:
