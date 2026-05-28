@@ -43,7 +43,7 @@ func _land() -> void:
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventScreenTouch and event.pressed:
-		if state == TileState.FALLING or state == TileState.PILED:
+		if state == TileState.FALLING or state == TileState.PILED or state == TileState.SELECTED:
 			tile_tapped.emit(self)
 
 
