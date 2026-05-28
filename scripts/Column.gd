@@ -47,6 +47,7 @@ func _ready() -> void:
 	add_child(_spawn_timer)
 
 	GameManager.state_changed.connect(_on_game_state_changed)
+	GameManager.speed_increased.connect(set_fall_speed)
 
 
 func _on_game_state_changed(new_state: GameManager.State) -> void:
@@ -94,6 +95,8 @@ func _spawn_tile() -> void:
 
 func _on_tile_landed(col_id: int, landed_tile: LetterTile) -> void:
 	if _pile.size() >= MAX_PILE:
+		GameManager.unregister_tile(landed_tile)
+		landed_tile.destroy()
 		return
 	_pile.append(landed_tile)
 	_update_pile_indicator()

@@ -48,6 +48,8 @@ func start_game(type: SessionType) -> void:
 
 
 func lose_life(col_id: int = -1) -> void:
+	if state != State.PLAYING:
+		return
 	lives -= 1
 	life_lost.emit(lives)
 	if lives <= 0:

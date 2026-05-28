@@ -49,12 +49,12 @@ func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> voi
 
 func select() -> void:
 	state = TileState.SELECTED
-	$TileBackground.modulate = Color(1.5, 1.5, 1.5)
+	$TileBackground.color = Palette.COL_COLOURS[column_id].lightened(0.35)
 
 
 func deselect() -> void:
 	state = TileState.PILED if position.y >= PILE_Y else TileState.FALLING
-	$TileBackground.modulate = Color.WHITE
+	$TileBackground.color = Palette.COL_COLOURS[column_id]
 
 
 func destroy() -> void:
