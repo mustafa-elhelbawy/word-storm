@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/Column.gd" id="script"]
+
+[node name="Column" type="Node2D"]
+script = ExtResource("script")
+
+[node name="SpawnPoint" type="Marker2D" parent="."]
+position = Vector2(0, -30)
+
+[node name="PileZoneMarker" type="Marker2D" parent="."]
+position = Vector2(0, 580)
+
+[node name="PileIndicator" type="ColorRect" parent="."]
+offset_left = 24.0
+offset_top = 580.0
+offset_right = 32.0
+offset_bottom = 580.0
+color = Color(1, 0.2, 0.2, 1)
