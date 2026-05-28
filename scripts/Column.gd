@@ -20,6 +20,7 @@ const LETTER_VALUES: Dictionary = {
 }
 
 signal pile_overflow(column_id: int)
+signal tile_spawned(tile: LetterTile)
 
 @export var column_id: int = 0
 
@@ -64,6 +65,16 @@ func _pick_letter() -> String:
 		_last_spawned_letter = "U"
 		return "U"
 
+	const VOWELS: Array = ["A", "E", "I", "O", "U"]
+	var vowel_count := 0
+	for tile in GameManager.active_tiles:
+		if tile.letter in VOWELS:
+			vowel_count += 1
+	if vowel_count == 0:
+		var v: String = VOWELS[_rng.randi() % VOWELS.size()]
+		_last_spawned_letter = v
+		return v
+
 	var chosen := _pool[_rng.randi() % _pool.size()]
 	for _attempt in 10:
 		var count := 0
@@ -86,11 +97,19 @@ func _spawn_tile() -> void:
 	var tile: LetterTile = _tile_scene.instantiate()
 	tile.setup(letter, LETTER_VALUES.get(letter, 1), column_id, GameManager.current_speed)
 	tile.tile_landed.connect(_on_tile_landed.bind(tile))
+	tile.tree_exiting.connect(_on_tile_exiting.bind(tile))
 	tile.position = $SpawnPoint.position
 	add_child(tile)
 	GameManager.register_tile(tile)
+	tile_spawned.emit(tile)
 
 	_spawn_timer.wait_time = _rng.randf_range(1.5, 3.5)
+
+
+func _on_tile_exiting(tile: LetterTile) -> void:
+	if _pile.has(tile):
+		_pile.erase(tile)
+		_update_pile_indicator()
 
 
 func _on_tile_landed(col_id: int, landed_tile: LetterTile) -> void:
@@ -114,6 +133,17 @@ func set_fall_speed(speed: float) -> void:
 	for child in get_children():
 		if child is LetterTile and child.state == LetterTile.TileState.FALLING:
 			child.fall_speed = speed
+
+
+func reset() -> void:
+	_spawn_timer.stop()
+	for child in get_children():
+		if child is LetterTile:
+			GameManager.unregister_tile(child)
+			child.queue_free()
+	_pile.clear()
+	_last_spawned_letter = ""
+	_update_pile_indicator()
 
 
 func clear_pile(fraction: float) -> void:

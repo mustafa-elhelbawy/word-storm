@@ -1,0 +1,151 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/GameScreen.gd" id="script"]
+[ext_resource type="PackedScene" path="res://scenes/game/Column.tscn" id="col_scene"]
+[ext_resource type="PackedScene" path="res://scenes/game/WordTray.tscn" id="tray_scene"]
+[ext_resource type="FontFile" path="res://assets/fonts/ui_font.ttf" id="font"]
+
+[sub_resource type="LabelSettings" id="ls_score"]
+font = ExtResource("font")
+font_size = 20
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="ls_lives"]
+font = ExtResource("font")
+font_size = 20
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="ls_gameover"]
+font = ExtResource("font")
+font_size = 40
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="ls_finalscore"]
+font = ExtResource("font")
+font_size = 26
+font_color = Color(1, 1, 1, 0.85)
+
+[node name="GameScreen" type="Node2D"]
+script = ExtResource("script")
+
+[node name="Background" type="ColorRect" parent="."]
+z_index = -1
+offset_right = 400.0
+offset_bottom = 680.0
+color = Color(0.055, 0.039, 0.118, 1)
+
+[node name="Column0" parent="." instance=ExtResource("col_scene")]
+position = Vector2(40, 0)
+column_id = 0
+
+[node name="Column1" parent="." instance=ExtResource("col_scene")]
+position = Vector2(120, 0)
+column_id = 1
+
+[node name="Column2" parent="." instance=ExtResource("col_scene")]
+position = Vector2(200, 0)
+column_id = 2
+
+[node name="Column3" parent="." instance=ExtResource("col_scene")]
+position = Vector2(280, 0)
+column_id = 3
+
+[node name="Column4" parent="." instance=ExtResource("col_scene")]
+position = Vector2(360, 0)
+column_id = 4
+
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="Header" type="ColorRect" parent="HUD"]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 400.0
+offset_bottom = 52.0
+color = Color(0.055, 0.039, 0.118, 0.88)
+
+[node name="ScoreLabel" type="Label" parent="HUD/Header"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 200.0
+offset_bottom = 44.0
+text = "0"
+label_settings = SubResource("ls_score")
+
+[node name="LivesLabel" type="Label" parent="HUD/Header"]
+offset_left = 210.0
+offset_top = 10.0
+offset_right = 392.0
+offset_bottom = 44.0
+horizontal_alignment = 2
+text = "♥ × 3"
+label_settings = SubResource("ls_lives")
+
+[node name="TrayBG" type="ColorRect" parent="HUD"]
+offset_left = 0.0
+offset_top = 588.0
+offset_right = 400.0
+offset_bottom = 632.0
+color = Color(0.04, 0.028, 0.09, 1)
+
+[node name="WordTray" parent="HUD/TrayBG" instance=ExtResource("tray_scene")]
+offset_left = 0.0
+offset_top = 2.0
+offset_right = 400.0
+offset_bottom = 42.0
+
+[node name="ButtonsBG" type="ColorRect" parent="HUD"]
+offset_left = 0.0
+offset_top = 634.0
+offset_right = 400.0
+offset_bottom = 680.0
+color = Color(0.04, 0.028, 0.09, 1)
+
+[node name="ClearButton" type="Button" parent="HUD/ButtonsBG"]
+offset_left = 8.0
+offset_top = 4.0
+offset_right = 192.0
+offset_bottom = 42.0
+text = "CLEAR"
+disabled = true
+
+[node name="SubmitButton" type="Button" parent="HUD/ButtonsBG"]
+offset_left = 208.0
+offset_top = 4.0
+offset_right = 392.0
+offset_bottom = 42.0
+text = "SUBMIT"
+disabled = true
+
+[node name="GameOverlay" type="ColorRect" parent="HUD"]
+visible = false
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 400.0
+offset_bottom = 680.0
+color = Color(0.0, 0.0, 0.0, 0.78)
+
+[node name="GameOverLabel" type="Label" parent="HUD/GameOverlay"]
+offset_left = 0.0
+offset_top = 220.0
+offset_right = 400.0
+offset_bottom = 290.0
+horizontal_alignment = 1
+text = "GAME OVER"
+label_settings = SubResource("ls_gameover")
+
+[node name="FinalScoreLabel" type="Label" parent="HUD/GameOverlay"]
+offset_left = 0.0
+offset_top = 300.0
+offset_right = 400.0
+offset_bottom = 345.0
+horizontal_alignment = 1
+text = "Score: 0"
+label_settings = SubResource("ls_finalscore")
+
+[node name="PlayAgainButton" type="Button" parent="HUD/GameOverlay"]
+offset_left = 110.0
+offset_top = 380.0
+offset_right = 290.0
+offset_bottom = 424.0
+text = "PLAY AGAIN"

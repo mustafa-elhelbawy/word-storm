@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/WordTray.gd" id="script"]
+
+[node name="WordTray" type="Control"]
+custom_minimum_size = Vector2(400, 40)
+script = ExtResource("script")
+
+[node name="Slots" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+alignment = 1
+theme_override_constants/separation = 2
