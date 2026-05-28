@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/TestGameScreen.gd" id="script"]
+[ext_resource type="PackedScene" path="res://scenes/game/Column.tscn" id="col_scene"]
+
+[node name="TestGameScreen" type="Node2D"]
+script = ExtResource("script")
+
+[node name="Column0" parent="." instance=ExtResource("col_scene")]
+position = Vector2(40, 0)
+column_id = 0
+
+[node name="Column1" parent="." instance=ExtResource("col_scene")]
+position = Vector2(120, 0)
+column_id = 1
+
+[node name="Column2" parent="." instance=ExtResource("col_scene")]
+position = Vector2(200, 0)
+column_id = 2
+
+[node name="Column3" parent="." instance=ExtResource("col_scene")]
+position = Vector2(280, 0)
+column_id = 3
+
+[node name="Column4" parent="." instance=ExtResource("col_scene")]
+position = Vector2(360, 0)
+column_id = 4
