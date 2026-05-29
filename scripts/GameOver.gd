@@ -35,8 +35,7 @@ func _ready() -> void:
 		AdManager.ad_unavailable.connect(_on_ad_unavailable, CONNECT_ONE_SHOT)
 		AdManager.ad_reward_granted.connect(_on_ad_reward_granted, CONNECT_ONE_SHOT)
 		AdManager.load_rewarded()
-
-	$AdSlot/ContinueAdButton.pressed.connect(func(): AdManager.show_rewarded())
+		$AdSlot/ContinueAdButton.pressed.connect(func(): AdManager.show_rewarded())
 	$PlayAgainButton.pressed.connect(func():
 		GameManager.start_game(GameManager.SessionType.CLASSIC))
 
