@@ -1,10 +1,14 @@
 extends Node2D
 
 var _word_tray: WordTray
+var _displayed_score: int = 0
+var _combo_popup_tween: Tween = null
 
 
 func _ready() -> void:
 	_word_tray = $HUD/TrayBG/WordTray
+
+	ParticleManager.set_effects_layer($EffectsLayer)
 
 	for child in get_children():
 		if child.has_signal("pile_overflow"):
@@ -20,9 +24,11 @@ func _ready() -> void:
 
 	GameManager.life_lost.connect(_on_life_lost)
 	GameManager.game_over.connect(_on_game_over)
+	GameManager.speed_increased.connect(_on_speed_increased)
 	WordValidator.word_accepted.connect(_on_word_accepted)
 	WordValidator.word_rejected.connect(_on_word_rejected)
-	ScoreManager.score_changed.connect(_on_score_changed)
+	ScoreManager.score_updated.connect(_on_score_updated)
+	ScoreManager.combo_changed.connect(_on_combo_changed)
 
 	ScoreManager.reset()
 	GameManager.start_game(GameManager.SessionType.CLASSIC)
@@ -53,30 +59,63 @@ func _on_clear_pressed() -> void:
 	_word_tray.clear()
 
 
-func _on_word_accepted(word: String, score: int) -> void:
+func _on_word_accepted(_word: String, _raw_score: int) -> void:
 	var tiles := _word_tray.get_tiles()
 	_word_tray.accept_and_destroy()
+	ScoreManager.award(tiles)
 	for tile in tiles:
+		ParticleManager.emit_burst(tile.global_position, tile.column_id)
 		tile.destroy()
-	ScoreManager.add(score)
+	AudioManager.play("word_valid")
+	ParticleManager.flash($HUD/FlashOverlay, Color(0.0, 0.8, 0.3), 0.2)
 
 
 func _on_word_rejected(_word: String) -> void:
+	ScoreManager.break_combo()
 	_word_tray.clear()
 	_flash_tray()
+	AudioManager.play("word_invalid")
 
 
 func _on_life_lost(lives: int) -> void:
 	_refresh_lives(lives)
-
-
-func _on_score_changed(new_score: int) -> void:
-	$HUD/Header/ScoreLabel.text = str(new_score)
+	AudioManager.play("life_lost")
+	ParticleManager.flash($HUD/FlashOverlay, Color(0.9, 0.1, 0.1), 0.3)
 
 
 func _on_game_over() -> void:
+	AudioManager.play("game_over")
 	$HUD/GameOverlay.visible = true
-	$HUD/GameOverlay/FinalScoreLabel.text = "Score: %d" % ScoreManager.current_score
+	$HUD/GameOverlay/FinalScoreLabel.text = "Score: %d" % ScoreManager.score
+
+
+func _on_speed_increased(_new_speed: float) -> void:
+	# Columns handle their own speed via GameManager.speed_increased — just show banner
+	_show_speed_banner()
+
+
+func _on_score_updated(new_score: int, _delta: int) -> void:
+	var tween := create_tween()
+	tween.tween_method(
+		func(v: int) -> void: $HUD/Header/ScoreLabel.text = str(v),
+		_displayed_score,
+		new_score,
+		0.4
+	)
+	_displayed_score = new_score
+
+
+func _on_combo_changed(multiplier: float) -> void:
+	var indicator := $HUD/Header/ComboIndicator
+	if multiplier <= 1.0:
+		indicator.hide()
+	else:
+		indicator.text = "×%.1f" % multiplier
+		indicator.show()
+		var tween := create_tween()
+		tween.tween_property(indicator, "scale", Vector2(1.3, 1.3), 0.1)
+		tween.tween_property(indicator, "scale", Vector2(1.0, 1.0), 0.1)
+	_show_combo_popup(multiplier)
 
 
 func _on_play_again_pressed() -> void:
@@ -85,9 +124,11 @@ func _on_play_again_pressed() -> void:
 	for child in get_children():
 		if child.has_method("reset"):
 			child.reset()
+	_displayed_score = 0
 	ScoreManager.reset()
 	GameManager.start_game(GameManager.SessionType.CLASSIC)
 	_refresh_lives(GameManager.MAX_LIVES)
+	_on_tray_changed(null)
 
 
 func _on_tray_changed(_tile) -> void:
@@ -97,7 +138,38 @@ func _on_tray_changed(_tile) -> void:
 
 
 func _refresh_lives(lives: int) -> void:
-	$HUD/Header/LivesLabel.text = "♥ × %d" % lives
+	var container := $HUD/Header/LivesContainer
+	var hearts := container.get_children()
+	for i in hearts.size():
+		# Dim hearts that are "lost" — e.g. with 2 lives remaining, heart at index 2 is dimmed
+		hearts[i].modulate.a = 1.0 if i < lives else 0.2
+
+
+func _show_combo_popup(multiplier: float) -> void:
+	if multiplier <= 1.0:
+		return
+	if _combo_popup_tween != null and _combo_popup_tween.is_valid():
+		_combo_popup_tween.kill()
+	var label := $HUD/ComboPopup
+	label.text = "+%.0f× COMBO!" % multiplier
+	label.position.y = 510.0
+	label.modulate.a = 1.0
+	label.show()
+	_combo_popup_tween = create_tween()
+	_combo_popup_tween.set_parallel(true)
+	_combo_popup_tween.tween_property(label, "position:y", 450.0, 0.6)
+	_combo_popup_tween.tween_property(label, "modulate:a", 0.0, 0.6)
+	_combo_popup_tween.chain().tween_callback(label.hide)
+
+
+func _show_speed_banner() -> void:
+	var banner := $HUD/SpeedBanner
+	banner.modulate.a = 1.0
+	banner.show()
+	var tween := create_tween()
+	tween.tween_interval(0.8)
+	tween.tween_property(banner, "modulate:a", 0.0, 0.4)
+	tween.tween_callback(banner.hide)
 
 
 func _flash_tray() -> void:
