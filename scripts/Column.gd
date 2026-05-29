@@ -178,9 +178,9 @@ func _prefill_pile(count: int) -> void:
 		tile.setup(letter, LETTER_VALUES.get(letter, 1), column_id, GameManager.current_speed)
 		tile.state = LetterTile.TileState.PILED
 		tile.position = Vector2(0.0, LetterTile.PILE_Y)
+		tile.input_pickable = false
 		tile.tree_exiting.connect(_on_tile_exiting.bind(tile))
 		add_child(tile)
 		GameManager.register_tile(tile)
 		_pile.append(tile)
-		tile_spawned.emit(tile)
 	_update_pile_indicator()
