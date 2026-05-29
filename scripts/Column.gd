@@ -47,8 +47,12 @@ func _ready() -> void:
 	_spawn_timer.timeout.connect(_spawn_tile)
 	add_child(_spawn_timer)
 
+	add_to_group("columns")
 	GameManager.state_changed.connect(_on_game_state_changed)
 	GameManager.speed_increased.connect(set_fall_speed)
+	# Bootstrap: scene may load after state_changed(PLAYING) was already emitted
+	if GameManager.state == GameManager.State.PLAYING:
+		_on_game_state_changed(GameManager.State.PLAYING)
 
 
 func _on_game_state_changed(new_state: GameManager.State) -> void:

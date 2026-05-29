@@ -1,0 +1,104 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/GameOver.gd" id="script"]
+[ext_resource type="FontFile" path="res://assets/fonts/ui_font.ttf" id="font"]
+
+[sub_resource type="LabelSettings" id="ls_title"]
+font = ExtResource("font")
+font_size = 32
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="ls_score"]
+font = ExtResource("font")
+font_size = 28
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="ls_best"]
+font = ExtResource("font")
+font_size = 18
+font_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="LabelSettings" id="ls_newbest"]
+font = ExtResource("font")
+font_size = 16
+font_color = Color(1.0, 0.8, 0.0, 1)
+
+[sub_resource type="LabelSettings" id="ls_noad"]
+font = ExtResource("font")
+font_size = 14
+font_color = Color(0.6, 0.6, 0.6, 1)
+
+[node name="GameOver" type="CanvasLayer"]
+script = ExtResource("script")
+
+[node name="DimBackground" type="ColorRect" parent="."]
+offset_right = 400.0
+offset_bottom = 680.0
+color = Color(0.0, 0.0, 0.0, 0.72)
+
+[node name="Panel" type="ColorRect" parent="."]
+offset_left = 40.0
+offset_top = 170.0
+offset_right = 360.0
+offset_bottom = 470.0
+color = Color(0.055, 0.039, 0.118, 0.96)
+
+[node name="GameOverLabel" type="Label" parent="."]
+offset_left = 0.0
+offset_top = 192.0
+offset_right = 400.0
+offset_bottom = 238.0
+horizontal_alignment = 1
+text = "GAME OVER"
+label_settings = SubResource("ls_title")
+
+[node name="FinalScoreLabel" type="Label" parent="."]
+offset_left = 0.0
+offset_top = 248.0
+offset_right = 400.0
+offset_bottom = 290.0
+horizontal_alignment = 1
+text = "Score: 0"
+label_settings = SubResource("ls_score")
+
+[node name="BestScoreLabel" type="Label" parent="."]
+offset_left = 0.0
+offset_top = 298.0
+offset_right = 400.0
+offset_bottom = 328.0
+horizontal_alignment = 1
+text = "Best: 0"
+label_settings = SubResource("ls_best")
+
+[node name="NewBestBadge" type="Label" parent="."]
+visible = false
+offset_left = 0.0
+offset_top = 330.0
+offset_right = 400.0
+offset_bottom = 356.0
+horizontal_alignment = 1
+text = "✦ NEW BEST ✦"
+label_settings = SubResource("ls_newbest")
+
+[node name="AdSlot" type="VBoxContainer" parent="."]
+offset_left = 100.0
+offset_top = 380.0
+offset_right = 300.0
+offset_bottom = 450.0
+theme_override_constants/separation = 6
+
+[node name="ContinueAdButton" type="Button" parent="AdSlot"]
+text = "Watch Ad → +1 Life"
+
+[node name="NoAdLabel" type="Label" parent="AdSlot"]
+visible = false
+horizontal_alignment = 1
+text = "No ad available"
+label_settings = SubResource("ls_noad")
+
+[node name="PlayAgainButton" type="Button" parent="."]
+offset_left = 100.0
+offset_top = 462.0
+offset_right = 300.0
+offset_bottom = 518.0
+text = "PLAY AGAIN"

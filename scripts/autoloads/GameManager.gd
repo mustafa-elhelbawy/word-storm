@@ -43,6 +43,14 @@ func start_game(type: SessionType) -> void:
 	current_speed = BASE_SPEED
 	elapsed_seconds = 0.0
 	active_tiles.clear()
+	ScoreManager.reset()
+	_set_state(State.PLAYING)
+
+
+func continue_game() -> void:
+	if state != State.GAME_OVER:
+		return
+	active_tiles.clear()
 	_set_state(State.PLAYING)
 
 

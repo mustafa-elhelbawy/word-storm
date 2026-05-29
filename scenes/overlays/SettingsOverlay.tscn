@@ -1,0 +1,89 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/SettingsOverlay.gd" id="script"]
+[ext_resource type="FontFile" path="res://assets/fonts/ui_font.ttf" id="font"]
+
+[sub_resource type="LabelSettings" id="ls_title"]
+font = ExtResource("font")
+font_size = 22
+font_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="ls_label"]
+font = ExtResource("font")
+font_size = 16
+font_color = Color(0.85, 0.85, 0.85, 1)
+
+[node name="SettingsOverlay" type="CanvasLayer"]
+layer = 10
+script = ExtResource("script")
+
+[node name="DimBackground" type="ColorRect" parent="."]
+mouse_filter = 0
+offset_right = 400.0
+offset_bottom = 680.0
+color = Color(0.0, 0.0, 0.0, 0.5)
+
+[node name="Panel" type="ColorRect" parent="."]
+offset_left = 50.0
+offset_top = 160.0
+offset_right = 350.0
+offset_bottom = 500.0
+color = Color(0.08, 0.06, 0.16, 0.98)
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 284.0
+offset_bottom = 324.0
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox"]
+horizontal_alignment = 1
+text = "Settings"
+label_settings = SubResource("ls_title")
+
+[node name="HSep1" type="HSeparator" parent="Panel/VBox"]
+
+[node name="SoundRow" type="HBoxContainer" parent="Panel/VBox"]
+theme_override_constants/separation = 8
+
+[node name="SoundLabel" type="Label" parent="Panel/VBox/SoundRow"]
+size_flags_horizontal = 3
+text = "Sound"
+label_settings = SubResource("ls_label")
+
+[node name="SoundToggle" type="CheckButton" parent="Panel/VBox/SoundRow"]
+
+[node name="HSep2" type="HSeparator" parent="Panel/VBox"]
+
+[node name="ThemeLabel" type="Label" parent="Panel/VBox"]
+text = "Theme"
+label_settings = SubResource("ls_label")
+
+[node name="ThemeGrid" type="GridContainer" parent="Panel/VBox"]
+columns = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+
+[node name="ThemeDefault" type="Button" parent="Panel/VBox/ThemeGrid"]
+custom_minimum_size = Vector2(108, 36)
+text = "Default"
+
+[node name="ThemeOcean" type="Button" parent="Panel/VBox/ThemeGrid"]
+custom_minimum_size = Vector2(108, 36)
+text = "Ocean 🔒"
+
+[node name="ThemeEmber" type="Button" parent="Panel/VBox/ThemeGrid"]
+custom_minimum_size = Vector2(108, 36)
+text = "Ember 🔒"
+
+[node name="ThemeVoid" type="Button" parent="Panel/VBox/ThemeGrid"]
+custom_minimum_size = Vector2(108, 36)
+text = "Void 🔒"
+
+[node name="CloseButton" type="Button" parent="."]
+offset_left = 316.0
+offset_top = 164.0
+offset_right = 348.0
+offset_bottom = 196.0
+text = "✕"
