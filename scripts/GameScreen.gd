@@ -21,7 +21,6 @@ func _ready() -> void:
 
 	$HUD/ButtonsBG/SubmitButton.pressed.connect(_on_submit_pressed)
 	$HUD/ButtonsBG/ClearButton.pressed.connect(_on_clear_pressed)
-	$HUD/GameOverlay/PlayAgainButton.pressed.connect(_on_play_again_pressed)
 
 	GameManager.life_lost.connect(_on_life_lost)
 	GameManager.game_over.connect(_on_game_over)
@@ -31,9 +30,7 @@ func _ready() -> void:
 	ScoreManager.score_updated.connect(_on_score_updated)
 	ScoreManager.combo_changed.connect(_on_combo_changed)
 
-	ScoreManager.reset()
-	GameManager.start_game(GameManager.SessionType.CLASSIC)
-	_refresh_lives(GameManager.MAX_LIVES)
+	_refresh_lives(GameManager.lives)
 	_on_tray_changed(null)
 
 
@@ -86,8 +83,7 @@ func _on_life_lost(lives: int) -> void:
 
 func _on_game_over() -> void:
 	AudioManager.play("game_over")
-	$HUD/GameOverlay.visible = true
-	$HUD/GameOverlay/FinalScoreLabel.text = "Score: %d" % ScoreManager.score
+	# Main.gd handles the scene transition via GameManager.state_changed(GAME_OVER)
 
 
 func _on_speed_increased(_new_speed: float) -> void:
@@ -120,21 +116,6 @@ func _on_combo_changed(multiplier: float) -> void:
 		tween.tween_property(indicator, "scale", Vector2(1.3, 1.3), 0.1)
 		tween.tween_property(indicator, "scale", Vector2(1.0, 1.0), 0.1)
 	_show_combo_popup(multiplier)
-
-
-func _on_play_again_pressed() -> void:
-	$HUD/GameOverlay.visible = false
-	if _score_tween != null and _score_tween.is_valid():
-		_score_tween.kill()
-	_word_tray.accept_and_destroy()
-	for child in get_children():
-		if child.has_method("reset"):
-			child.reset()
-	_displayed_score = 0
-	ScoreManager.reset()
-	GameManager.start_game(GameManager.SessionType.CLASSIC)
-	_refresh_lives(GameManager.MAX_LIVES)
-	_on_tray_changed(null)
 
 
 func _on_tray_changed(_tile) -> void:

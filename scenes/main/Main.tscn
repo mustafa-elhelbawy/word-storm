@@ -1,7 +1,8 @@
 [gd_scene format=3]
 
-[ext_resource type="PackedScene" path="res://scenes/game/GameScreen.tscn" id="game_scene"]
+[ext_resource type="Script" path="res://scripts/Main.gd" id="script"]
 
 [node name="Main" type="Node"]
+script = ExtResource("script")
 
-[node name="GameScreen" parent="." instance=ExtResource("game_scene")]
+[node name="SceneContainer" type="Node" parent="."]
