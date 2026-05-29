@@ -6,4 +6,5 @@ func fire(colour: Color) -> void:
 	mat.color = colour
 	$Particles.emitting = true
 	await get_tree().create_timer($Particles.lifetime + 0.1).timeout
-	queue_free()
+	if is_instance_valid(self):
+		queue_free()

@@ -3,6 +3,7 @@ extends Node2D
 var _word_tray: WordTray
 var _displayed_score: int = 0
 var _combo_popup_tween: Tween = null
+var _score_tween: Tween = null
 
 
 func _ready() -> void:
@@ -95,14 +96,17 @@ func _on_speed_increased(_new_speed: float) -> void:
 
 
 func _on_score_updated(new_score: int, _delta: int) -> void:
-	var tween := create_tween()
-	tween.tween_method(
+	if _score_tween != null and _score_tween.is_valid():
+		_score_tween.kill()
+	var from := _displayed_score
+	_displayed_score = new_score
+	_score_tween = create_tween()
+	_score_tween.tween_method(
 		func(v: int) -> void: $HUD/Header/ScoreLabel.text = str(v),
-		_displayed_score,
+		from,
 		new_score,
 		0.4
 	)
-	_displayed_score = new_score
 
 
 func _on_combo_changed(multiplier: float) -> void:
@@ -120,6 +124,8 @@ func _on_combo_changed(multiplier: float) -> void:
 
 func _on_play_again_pressed() -> void:
 	$HUD/GameOverlay.visible = false
+	if _score_tween != null and _score_tween.is_valid():
+		_score_tween.kill()
 	_word_tray.accept_and_destroy()
 	for child in get_children():
 		if child.has_method("reset"):

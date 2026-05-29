@@ -42,6 +42,8 @@ func reset() -> void:
 
 
 func award(tiles: Array) -> int:
+	if tiles.is_empty():
+		return 0
 	var length := tiles.size()
 	var base: int = BASE_SCORES.get(length, BASE_SCORE_LONG)
 
