@@ -21,7 +21,6 @@ var lives:           int         = MAX_LIVES
 var speed_level:     int         = 0
 var current_speed:   float       = BASE_SPEED
 var elapsed_seconds: float       = 0.0
-var best_score:      int         = 0
 var active_tiles:    Array       = []
 
 

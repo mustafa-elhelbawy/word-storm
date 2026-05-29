@@ -65,6 +65,8 @@ func clear() -> void:
 
 
 func accept_and_destroy() -> void:
+	for tile in _tiles.duplicate():
+		_disconnect_exiting(tile)
 	_tiles.clear()
 	_refresh()
 

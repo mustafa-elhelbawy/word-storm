@@ -7,13 +7,18 @@
 
 [sub_resource type="LabelSettings" id="ls_score"]
 font = ExtResource("font")
-font_size = 20
+font_size = 22
 font_color = Color(1, 1, 1, 1)
 
-[sub_resource type="LabelSettings" id="ls_lives"]
+[sub_resource type="LabelSettings" id="ls_hearts"]
 font = ExtResource("font")
 font_size = 20
-font_color = Color(1, 1, 1, 1)
+font_color = Color(0.18, 0.8, 0.72, 1)
+
+[sub_resource type="LabelSettings" id="ls_combo_indicator"]
+font = ExtResource("font")
+font_size = 18
+font_color = Color(1.0, 0.9, 0.2, 1)
 
 [sub_resource type="LabelSettings" id="ls_gameover"]
 font = ExtResource("font")
@@ -24,6 +29,16 @@ font_color = Color(1, 1, 1, 1)
 font = ExtResource("font")
 font_size = 26
 font_color = Color(1, 1, 1, 0.85)
+
+[sub_resource type="LabelSettings" id="ls_combo_popup"]
+font = ExtResource("font")
+font_size = 22
+font_color = Color(1.0, 0.9, 0.2, 1)
+
+[sub_resource type="LabelSettings" id="ls_speed_banner"]
+font = ExtResource("font")
+font_size = 22
+font_color = Color(1.0, 0.8, 0.0, 1)
 
 [node name="GameScreen" type="Node2D"]
 script = ExtResource("script")
@@ -54,6 +69,8 @@ column_id = 3
 position = Vector2(360, 0)
 column_id = 4
 
+[node name="EffectsLayer" type="Node2D" parent="."]
+
 [node name="HUD" type="CanvasLayer" parent="."]
 layer = 10
 
@@ -66,20 +83,41 @@ color = Color(0.055, 0.039, 0.118, 0.88)
 
 [node name="ScoreLabel" type="Label" parent="HUD/Header"]
 offset_left = 10.0
-offset_top = 10.0
-offset_right = 200.0
+offset_top = 8.0
+offset_right = 220.0
 offset_bottom = 44.0
 text = "0"
 label_settings = SubResource("ls_score")
 
-[node name="LivesLabel" type="Label" parent="HUD/Header"]
-offset_left = 210.0
+[node name="ComboIndicator" type="Label" parent="HUD/Header"]
+visible = false
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 220.0
+offset_bottom = 44.0
+horizontal_alignment = 1
+text = "×1.5"
+label_settings = SubResource("ls_combo_indicator")
+
+[node name="LivesContainer" type="HBoxContainer" parent="HUD/Header"]
+offset_left = 270.0
 offset_top = 10.0
 offset_right = 392.0
 offset_bottom = 44.0
-horizontal_alignment = 2
-text = "♥ × 3"
-label_settings = SubResource("ls_lives")
+alignment = 2
+theme_override_constants/separation = 2
+
+[node name="Heart0" type="Label" parent="HUD/Header/LivesContainer"]
+text = "♥"
+label_settings = SubResource("ls_hearts")
+
+[node name="Heart1" type="Label" parent="HUD/Header/LivesContainer"]
+text = "♥"
+label_settings = SubResource("ls_hearts")
+
+[node name="Heart2" type="Label" parent="HUD/Header/LivesContainer"]
+text = "♥"
+label_settings = SubResource("ls_hearts")
 
 [node name="TrayBG" type="ColorRect" parent="HUD"]
 offset_left = 0.0
@@ -116,6 +154,34 @@ offset_right = 392.0
 offset_bottom = 42.0
 text = "SUBMIT"
 disabled = true
+
+[node name="FlashOverlay" type="ColorRect" parent="HUD"]
+mouse_filter = 2
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 400.0
+offset_bottom = 680.0
+color = Color(1.0, 0.0, 0.0, 0.0)
+
+[node name="ComboPopup" type="Label" parent="HUD"]
+visible = false
+offset_left = 50.0
+offset_top = 510.0
+offset_right = 350.0
+offset_bottom = 548.0
+horizontal_alignment = 1
+text = "+2× COMBO!"
+label_settings = SubResource("ls_combo_popup")
+
+[node name="SpeedBanner" type="Label" parent="HUD"]
+visible = false
+offset_left = 100.0
+offset_top = 290.0
+offset_right = 300.0
+offset_bottom = 320.0
+horizontal_alignment = 1
+text = "⚡ FASTER!"
+label_settings = SubResource("ls_speed_banner")
 
 [node name="GameOverlay" type="ColorRect" parent="HUD"]
 visible = false

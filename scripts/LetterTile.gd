@@ -39,12 +39,14 @@ func _process(delta: float) -> void:
 func _land() -> void:
 	state = TileState.PILED
 	tile_landed.emit(column_id)
+	AudioManager.play("tile_land")
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventScreenTouch and event.pressed:
 		if state == TileState.FALLING or state == TileState.PILED or state == TileState.SELECTED:
 			tile_tapped.emit(self)
+			AudioManager.play("tile_select")
 
 
 func select() -> void:
