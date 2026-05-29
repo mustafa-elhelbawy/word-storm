@@ -14,14 +14,15 @@ const SPEED_INTERVAL: float = 30.0
 const MAX_SPEED:      float = 220.0
 const MAX_LIVES:      int   = 3
 
-var state:           State       = State.TITLE
-var session_type:    SessionType = SessionType.CLASSIC
-var session_seed:    int         = 0
-var lives:           int         = MAX_LIVES
-var speed_level:     int         = 0
-var current_speed:   float       = BASE_SPEED
-var elapsed_seconds: float       = 0.0
-var active_tiles:    Array       = []
+var state:                    State       = State.TITLE
+var session_type:             SessionType = SessionType.CLASSIC
+var session_seed:             int         = 0
+var lives:                    int         = MAX_LIVES
+var speed_level:              int         = 0
+var current_speed:            float       = BASE_SPEED
+var elapsed_seconds:          float       = 0.0
+var active_tiles:             Array       = []
+var continuation_pile_fraction: float     = 0.0
 
 
 func _process(delta: float) -> void:
@@ -43,6 +44,7 @@ func start_game(type: SessionType) -> void:
 	current_speed = BASE_SPEED
 	elapsed_seconds = 0.0
 	active_tiles.clear()
+	continuation_pile_fraction = 0.0
 	ScoreManager.reset()
 	_set_state(State.PLAYING)
 
@@ -51,6 +53,7 @@ func continue_game() -> void:
 	if state != State.GAME_OVER:
 		return
 	active_tiles.clear()
+	continuation_pile_fraction = 0.5
 	elapsed_seconds = float(speed_level) * SPEED_INTERVAL
 	_set_state(State.PLAYING)
 
