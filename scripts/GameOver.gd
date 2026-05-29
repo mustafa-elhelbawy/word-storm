@@ -14,7 +14,7 @@ func _ready() -> void:
 		0, final_score, 1.0
 	)
 
-	if final_score > 0 and final_score >= best:
+	if final_score > 0 and final_score > best:
 		$NewBestBadge.show()
 		$NewBestBadge.scale = Vector2(0.5, 0.5)
 		var badge_tween := create_tween()

@@ -51,6 +51,7 @@ func continue_game() -> void:
 	if state != State.GAME_OVER:
 		return
 	active_tiles.clear()
+	elapsed_seconds = float(speed_level) * SPEED_INTERVAL
 	_set_state(State.PLAYING)
 
 

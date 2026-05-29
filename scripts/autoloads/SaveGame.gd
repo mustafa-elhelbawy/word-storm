@@ -22,6 +22,10 @@ func _load() -> void:
 		_data = DEFAULTS.duplicate(true)
 		return
 	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if file == null:
+		push_warning("SaveGame: could not open save file — resetting to defaults")
+		_data = DEFAULTS.duplicate(true)
+		return
 	var text := file.get_as_text()
 	file.close()
 	var parsed = JSON.parse_string(text)
@@ -32,10 +36,17 @@ func _load() -> void:
 	_data = DEFAULTS.duplicate(true)
 	for key in parsed:
 		_data[key] = parsed[key]
+	if not _data["daily"] is Dictionary:
+		_data["daily"] = {}
+	if not _data["unlocked_themes"] is Array:
+		_data["unlocked_themes"] = []
 
 
 func _save() -> void:
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if file == null:
+		push_warning("SaveGame: could not write save file")
+		return
 	file.store_string(JSON.stringify(_data, "\t"))
 	file.close()
 
