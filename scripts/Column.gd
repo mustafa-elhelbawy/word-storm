@@ -53,6 +53,9 @@ func _ready() -> void:
 	# Bootstrap: scene may load after state_changed(PLAYING) was already emitted
 	if GameManager.state == GameManager.State.PLAYING:
 		_on_game_state_changed(GameManager.State.PLAYING)
+		if GameManager.continuation_pile_fraction > 0.0:
+			var fill_count := ceili(MAX_PILE * GameManager.continuation_pile_fraction)
+			_prefill_pile.call_deferred(fill_count)
 
 
 func _on_game_state_changed(new_state: GameManager.State) -> void:
@@ -164,4 +167,20 @@ func clear_pile(fraction: float) -> void:
 			break
 		var tile: LetterTile = _pile.pop_front()
 		tile.destroy()
+	_update_pile_indicator()
+
+
+func _prefill_pile(count: int) -> void:
+	var fill := mini(count, MAX_PILE - 1)
+	for _i in fill:
+		var letter := _pick_letter()
+		var tile: LetterTile = _tile_scene.instantiate()
+		tile.setup(letter, LETTER_VALUES.get(letter, 1), column_id, GameManager.current_speed)
+		tile.state = LetterTile.TileState.PILED
+		tile.position = Vector2(0.0, LetterTile.PILE_Y)
+		tile.input_pickable = false
+		tile.tree_exiting.connect(_on_tile_exiting.bind(tile))
+		add_child(tile)
+		GameManager.register_tile(tile)
+		_pile.append(tile)
 	_update_pile_indicator()
