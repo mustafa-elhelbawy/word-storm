@@ -171,6 +171,8 @@ func clear_pile(fraction: float) -> void:
 
 
 func _prefill_pile(count: int) -> void:
+	if GameManager.state != GameManager.State.PLAYING:
+		return
 	var fill := mini(count, MAX_PILE - 1)
 	for _i in fill:
 		var letter := _pick_letter()
