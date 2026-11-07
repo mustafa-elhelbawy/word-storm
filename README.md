@@ -6,9 +6,13 @@
 
 ![Godot](https://img.shields.io/badge/Godot-4.3-478CBF?logo=godotengine&logoColor=white)
 ![GDScript](https://img.shields.io/badge/GDScript-100%25-355570)
-![Platforms](https://img.shields.io/badge/Platforms-Android%20%7C%20Web-3DDC84?logo=android&logoColor=white)
+[![Play in browser](https://img.shields.io/badge/Play-in%20browser-00C8B8?logo=html5&logoColor=white)](https://www.glitchy-tap.com/revamp/games/word-storm/)
 ![Offline](https://img.shields.io/badge/Offline--first-yes-blue)
 ![Workflow](https://img.shields.io/badge/Workflow-Spec--Driven-8A2BE2)
+
+### [▶ Play in your browser](https://www.glitchy-tap.com/revamp/games/word-storm/)
+
+<sub>Hosted on <a href="https://www.glitchy-tap.com/revamp/">GlitchyTap</a>, the studio showcase I run with a fellow developer</sub>
 
 </div>
 
@@ -16,7 +20,7 @@
 
 A casual mobile word game built with **Godot 4 (GDScript)**. Letters rain down in five columns — tap to grab them, spell valid English words, and submit before the pile reaches the top. Miss too many and you lose a life. Lose three lives and the storm wins.
 
-Targets **Android** (primary) and **Web/HTML5** (itch.io).
+Targets **Android** (primary) and **Web/HTML5**. The web build is [playable on GlitchyTap](https://www.glitchy-tap.com/revamp/games/word-storm/).
 
 ## Highlights
 
@@ -136,7 +140,8 @@ The project is built in five phases, each sized for 1–2 hour coding sessions a
 | **3: Word Logic** | Tap → tray → validate → score or reject; full game loop | ✅ |
 | **4: Juice & Daily** | Scoring combos, HUD tweens, particles, audio, themes, Daily Challenge | ✅ |
 | **5: Screens & Export** | Start / Game Over / Settings screens, save system, ad-reward continue (stub), Android + Web export presets | ✅ |
-| **Next** | Final SFX + art atlas, live AdMob + IAP, signed Play Store release, itch.io web build | 🔜 |
+| **Web release** | HTML5 build playable on [GlitchyTap](https://www.glitchy-tap.com/revamp/games/word-storm/) | ✅ |
+| **Next** | Final SFX + art atlas, live AdMob + IAP, signed Play Store release | 🔜 |
 
 ### How it was built
 
