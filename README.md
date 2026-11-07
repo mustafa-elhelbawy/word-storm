@@ -1,8 +1,31 @@
+<div align="center">
+
 # Word Storm
+
+**Letters rain down. Spell words before the storm buries you.**
+
+![Godot](https://img.shields.io/badge/Godot-4.3-478CBF?logo=godotengine&logoColor=white)
+![GDScript](https://img.shields.io/badge/GDScript-100%25-355570)
+![Platforms](https://img.shields.io/badge/Platforms-Android%20%7C%20Web-3DDC84?logo=android&logoColor=white)
+![Offline](https://img.shields.io/badge/Offline--first-yes-blue)
+![Workflow](https://img.shields.io/badge/Workflow-Spec--Driven-8A2BE2)
+
+</div>
+
+---
 
 A casual mobile word game built with **Godot 4 (GDScript)**. Letters rain down in five columns — tap to grab them, spell valid English words, and submit before the pile reaches the top. Miss too many and you lose a life. Lose three lives and the storm wins.
 
-Available on **Android** (primary) and **Web/HTML5** via itch.io.
+Targets **Android** (primary) and **Web/HTML5** (itch.io).
+
+## Highlights
+
+- **Data-driven word engine:** ~100k-word English dictionary bundled offline, with O(1) hash lookup on every submit
+- **Deterministic Daily Challenge:** per-column RNGs seeded from the date, so every player gets the same letter sequence
+- **Signal-based architecture:** 8 single-responsibility autoloads that talk only through Godot signals
+- **Mobile-first:** portrait touch input, APK size budget of 30 MB or less, Mobile renderer, fully offline save
+- **Game feel:** combo multipliers, HUD tweens, pooled particles and audio, 4 switchable colour themes
+- **Spec-driven delivery:** every phase was specified, planned, split into tasks, built on its own branch, reviewed in a PR, and review findings fixed before merge
 
 ---
 
@@ -25,7 +48,7 @@ Available on **Android** (primary) and **Web/HTML5** via itch.io.
 - **Tap to select** — tap a selected tile again to deselect; order matters for scoring
 - **Submit words of 3+ letters** — valid English words score points, destroy tiles, and keep columns clear
 - **Pile overflow = life lost** — a column that fills to the danger line costs 1 of 3 lives
-- **Combo multiplier** — chain valid words without a miss to reach ×1.5 → ×2 → ×3
+- **Combo multiplier**: chain valid words to reach ×1.5 (2 words) → ×2 (4) → ×3 (6). The combo resets after 6 s without a valid word
 - **Speed escalates** every 30 seconds — from 80 px/s up to a 220 px/s cap
 - **Daily Challenge** — same letter sequence for every player on a given date (date-derived seed)
 - **Classic mode** — random seed, unlimited play until all 3 lives are gone
@@ -53,7 +76,8 @@ Each tile also carries a Scrabble-style point value (1–10). High-value tiles l
 | **Renderer** | Mobile (Godot's forward mobile pipeline) |
 | **Persistence** | `user://save.json` via `FileAccess` — fully offline |
 | **Word list** | Bundled `words_en.txt` — 100k entries, O(1) Dictionary lookup |
-| **Monetisation** | Rewarded ads via AdMob (Phase 5) · IAP theme unlocks |
+| **Themes** | 4 palettes (Default, Ocean, Ember, Void) via `ThemeManager.theme_changed` |
+| **Monetisation** | Rewarded "continue" ad behind an `AdManager` interface (stubbed with Google test IDs; live AdMob SDK + IAP theme unlocks planned) |
 
 ---
 
@@ -72,6 +96,11 @@ word-storm/
 │   └── effects/               # TileBurst (GPUParticles2D)
 │
 ├── scripts/
+│   ├── GameScreen.gd          # Gameplay orchestrator · HUD · signal wiring
+│   ├── Column.gd              # Per-column spawn, fall, pile + continue pre-fill (seeded RNG)
+│   ├── LetterTile.gd          # Area2D tile · tap detection · Scrabble value
+│   ├── WordTray.gd            # Selected-letter tray · submit / clear
+│   ├── StartScreen.gd · GameOver.gd · SettingsOverlay.gd · Main.gd · TileBurst.gd
 │   ├── Palette.gd             # Static colour constants (class_name, not autoload)
 │   └── autoloads/             # 8 global singletons — load order matters
 │       ├── GameManager.gd     # State machine · lives · speed progression
@@ -84,9 +113,9 @@ word-storm/
 │       └── ThemeManager.gd    # Palette per theme · theme_changed signal
 │
 ├── assets/
-│   ├── textures/              # atlas.png — single sprite atlas
-│   ├── audio/sfx/             # 6 × .ogg sound effects
-│   ├── fonts/                 # Orbitron variable font + LabelSettings resource
+│   ├── textures/              # sprite atlas slot
+│   ├── audio/sfx/             # .ogg SFX slots (AudioManager skips missing files)
+│   ├── fonts/                 # Orbitron (ui_font.ttf) + font resource
 │   └── data/
 │       └── words_en.txt       # 100k English words, 3–8 chars, bundled offline
 │
@@ -98,15 +127,20 @@ word-storm/
 
 ## Development Roadmap
 
-The project is built in five phases, each sized for 1–2 hour coding sessions.
+The project is built in five phases, each sized for 1–2 hour coding sessions and delivered as a reviewed pull request.
 
 | Phase | Goal | Status |
-|-------|------|--------|
-| **1 — Scaffold** | Godot project opens at 400×680 portrait; autoload stubs parse; word list + font bundled | ✅ Complete |
-| **2 — Letter Rain** | Letters fall in 5 columns, pile up, losing 3 lives transitions to Game Over | 🔲 In progress |
-| **3 — Word Logic** | Tap letters → build word in tray → validate → score or reject → full game loop | 🔲 Planned |
-| **4 — Juice & Daily** | Particles, audio, combo animations, Daily Challenge seed system, theme switcher | 🔲 Planned |
-| **5 — Monetisation & Export** | AdMob rewarded ads, IAP theme unlocks, signed AAB (Play Store), Web export | 🔲 Planned |
+|-------|------|:------:|
+| **1: Scaffold** | Godot project at 400×680 portrait; autoload stubs; word list + font bundled | ✅ |
+| **2: Letter Rain** | `LetterTile`, `Column`, `GameManager`: letters fall in 5 columns and pile up; 3 lives → Game Over | ✅ |
+| **3: Word Logic** | Tap → tray → validate → score or reject; full game loop | ✅ |
+| **4: Juice & Daily** | Scoring combos, HUD tweens, particles, audio, themes, Daily Challenge | ✅ |
+| **5: Screens & Export** | Start / Game Over / Settings screens, save system, ad-reward continue (stub), Android + Web export presets | ✅ |
+| **Next** | Final SFX + art atlas, live AdMob + IAP, signed Play Store release, itch.io web build | 🔜 |
+
+### How it was built
+
+Each phase followed a spec-driven loop ([GitHub Spec Kit](https://github.com/github/spec-kit)): **specify → plan → tasks → implement → architect review → fix → merge**. The specs and task files live in [`specs/`](specs). The commit history shows each review round (for example `fix(phase-3): resolve all 4 architect review findings`).
 
 ---
 
@@ -205,5 +239,6 @@ The game communicates entirely through Godot signals — no direct cross-node ca
 
 ## Credits
 
+- **Design & development**: [Mustafa El-Helbawy](https://github.com/mustafa-elhelbawy)
 - **Font**: [Orbitron](https://fonts.google.com/specimen/Orbitron) by Matt McInerney — SIL Open Font License 1.1
 - **Word list**: [dwyl/english-words](https://github.com/dwyl/english-words) — The Unlicense
